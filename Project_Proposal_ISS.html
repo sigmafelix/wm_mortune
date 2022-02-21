@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Tales of deaths in three recent recessions</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+    <link href="https://fonts.googleapis.com/css?family=Neuton|Questrial&display=swap" rel="stylesheet"> 
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <style>
+    </style>
+</head>
+
+<body>
+
+    <style>
+        body {
+            overflow: hidden;
+        }
+
+        .container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .map {
+            position: absolute;
+            height: 96vh;
+            width: 96vw;
+        }
+
+        .container div {
+            position: relative;
+            scroll-snap-align: start;
+            overflow-y: hidden;
+            height: 100vh;
+            width: 100vw;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .section {
+            overflow-y: scroll;
+            font-size: 2rem;
+        
+        }
+        
+        .titlepage h1 {
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 4rem;
+            font-family: 'Questrial', sans-serif;
+        }
+        .titlepage h2 {
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 2rem;
+            font-family: 'Questrial', sans-serif;
+        }
+
+        p {
+            
+            font-family: 'Neuton', serif;
+            font-size: 1.5rem;
+
+        }
+        
+        .imgbox {
+            display: grid;
+            height: 90%;
+        }
+        .center-fit {
+            max-width: 80%;
+            max-height: 92vh;
+            margin: auto;
+        }
+    </style>
+
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.1.0/mapbox-gl-compare.css' type='text/css' />
+
+    <div class='container'>
+        <div class='titlepage'>
+            <p>GEOG590: Final project</p><br/><br/>
+            <h1>Exploring the association between mortality and unemployment rate in the counties in coterminous states in the US during three recession periods in 1991-2014</h1>
+            <h2>Insang Song</h2>
+            <h2>Department of Geography, University of Oregon</h2>
+        </div>
+        <div>
+            <iframe scrolling="no" marginheight="0" marginwidth="0" src="Project_Summary.html" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
+        <div>
+            <iframe scrolling="no" marginheight="0" marginwidth="0" src="Unemployment.html" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
+        <div>
+            <iframe scrolling="no" marginheight="0" marginwidth="0" src="Mortality_Allcause.html" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
+        <div>
+            <p><i>Briefly summarize your project and why it is interesting or important.</i></p>
+            <p>: There was a body of literature having shown the association between the mortality rate (all-cause or cause-specific) and the unemployment rate. Those studies have examined the association by considering the raw values of unemployment rates and mortality rates in individual levels. As the labor market is highly localized (Hanson and Pratt 1992; Moretti 2010; Patuelli <i>et al.</i> 2012), it would be appropriate to see such association in a spatial level. Also, as the impact of increase or decrease of unemployment rates would affect the change in mortality rates, this study focuses on the <b>change</b> of two rates and investigates the association between them. We also employ bivariate spatial autocorrelation measures to examine whether there is a spatial pattern of co-existence of changes in two rate changes. This study can help us to understand the impact of the significant shift in local labor market represented as the change in unemployment rates to the mortality rate changes, such that we could suggest the different view on the association of mortality and unemployment. </p>
+	        <br/>
+            <p><i>Why is a map (or set of maps) appropriate to present the story?</i></p>
+            <p>:  Thinking of the basic functionality of maps is to visualize spatial patterns, the objectives of this project call for it. For instance, although the data is to be transformed as the yearly rate of change, its spatial pattern at the county scale can only be effectively visualized by employing maps. As we aim to show the bivariate spatial relationship, maps for every single variables and composite bivariate choropleth are crucial to communicate the study results with others. Also, the nature of multi-dimensionality of the data we use requires more flexible functionalities of maps such as interactive exploration of the data and showing temporal change of target data values in a certain location. Interactive maps fulfill all needs of communication for delivering this project's outputs to the viewers. </p>
+	        <br/>
+            <p><i>What is the geographic area that will be covered? Will you use a local, regional, or global scale?</i></p>
+            <p>:  <b>Regional scale.</b> This project aims to visualize counties in 48 coterminous US states. It seems that the appropriate zoom level in Mapbox is 4-8.</p>
+	        <br/>
+            <p><i>What are the data sources available for this topic? Potential or already identified?</i></p>
+            <p>: Please read the <i>Data acquisition and munging</i> at the third section of this web page.</p>
+	        <br/>
+        </div>
+        <div>
+            <p><i>Include a sketch (computer or hand done) that describes the anticipated UI features and a UX-interaction diagram.</i></p>
+            <div class='imgbox'><img class='center-fit' src=UIUX.png></div>
+        </div>
+        <div>
+            <h1>Another challenge...</h1>
+            <p><b>Data size.</b> Currently, the GeoJSON file for mortality rate of change </p>
+        </div>
+        <div>
+            <iframe scrolling="no" marginheight="0" marginwidth="0" src="Bibliography.html" width="100%" height="100%" frameborder="0"></iframe>            
+        </div>
+        
+    </div>
+    <script>
+
+
+
+    </script>
+
+</body>
+
+</html>

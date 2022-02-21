@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Mental and substance use mortality: Three recessions</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <!-- mapbox import -->
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+    <!-- !!! Google font import -->
+    <link href="https://fonts.googleapis.com/css?family=Fjalla+One&display=swap" rel="stylesheet">
+    <!-- Plotly javascript import -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- custom javascript codes and stylesheet -->
+    <script type="text/javascript" src="./js/base.js"></script>
+    <link href='./css/felixstyle.css' rel='stylesheet' />
+
+</head>
+
+<body>
+    <!-- Plotly javascript import from the internet -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    
+    <!-- side navigation panel for interactive visualization -->    
+    <div id="mySidenav" class="sidenav">
+        <!-- Close button -->
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <!-- County name -->
+        <div id='countytitle'> </div>
+        <!-- Plot -->
+        <div id="plotmenu"> </div>
+    </div>
+    <!-- nav for selecting layers -->
+    <nav id="layerlist"> </nav>
+
+    <!-- the main map -->
+    <div id='ue' class='map'>
+    </div>
+
+    <!-- Legend -->
+    <div class="LegendContainer">
+        <div class="legendItem">
+            <div class="layerDescription"> Mortality rates<br> (Mental and substance-use disorders, <br> per 100,000 persons)</div>
+        </div>
+
+        <div class="legendItem">
+            <div class="colorBox" style="background-color: #f6eff7;"></div>
+            <div class="layerDescription">[0, 2)</div>
+        </div>
+        <div class="legendItem">
+            <div class="colorBox" style="background-color: #bce9eb;"></div>
+            <div class="layerDescription">[2, 5)</div>
+        </div>
+        <div class="legendItem">
+            <div class="colorBox" style="background-color: #80dfdb;"></div>
+            <div class="layerDescription">[5, 15)</div>
+        </div>
+        <div class="legendItem">
+            <div class="colorBox" style="background-color: #42c4bd;"></div>
+            <div class="layerDescription">[15, 30)</div>
+        </div>
+        <div class="legendItem">
+            <div class="colorBox" style="background-color: #04a99e;"></div>
+            <div class="layerDescription">[30, max)</div>
+        </div>
+        <!-- to help users understand what the mathematical sign in the legend item mean-->
+        <div class="datasource">
+            <div class="layerDescription">'[' indicates '<='; ')' indicates '<'  </div>
+            <br>
+            <div class="layerDescription">Data source: <br><a href=https://www.healthdata.org>IHME</a>; <br>US Census Bureau</div>
+        </div>
+
+    </div>
+
+    <!-- add layer names to nav: script -->
+    <script type="text/javascript" src="./js/navcontrol.js"></script>
+
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoic2lnbWFmZWxpeCIsImEiOiJjam9kMThxcmcxMzkzM3FyMGw0ajNqZzExIn0.pKF9_nOc47mgqZ20ZrlYqA';
+
+        var ueMap = new mapboxgl.Map({
+            container: 'ue',
+            style: 'mapbox://styles/sigmafelix/ck2jjwmmt2pym1cs2zxlq9h16',
+            center: [-98, 39],
+            zoom: 5,
+            minZoom: 5,
+            maxZoom: 10
+        });
+
+        // initialize layer 1 on load
+        ueMap.on('load', function() {
+            ueMap.addLayer({
+                id: 'UE-rc1',
+                type: "fill",
+                source: {
+                    minzoom: 5,
+                    maxzoom: 10,
+                    type: 'vector',
+                    url: 'mapbox://sigmafelix.6mc92gkq'
+                },
+                'source-layer': 'County_info-auv3ds', 
+                paint: {
+                    'fill-color': ["step",
+                        ["get", "Mentalandsubstanceusedisorders_1992"],
+                        "#f6eff7",
+                        2,
+                        "#bce9eb",
+                        5,
+                        "#80dfdb",
+                        15,
+                        "#42c4bd",
+                        30,
+                        "#04a99e"
+                    ],
+                    "fill-opacity": 0.66
+                },
+                layout: {
+                    'visibility': 'none'
+                }
+            });
+
+
+            ueMap.on('click', 'UE-rc1', function(e) {
+                document.getElementById("mySidenav").style.width = "400px";
+
+                dsk = ['Mentalandsubstanceusedisorders_1991', 'Mentalandsubstanceusedisorders_1992', 'Mentalandsubstanceusedisorders_1993', 'Mentalandsubstanceusedisorders_1994', 'Mentalandsubstanceusedisorders_1995',
+                'Mentalandsubstanceusedisorders_1996', 'Mentalandsubstanceusedisorders_1997', 'Mentalandsubstanceusedisorders_1998', 'Mentalandsubstanceusedisorders_1999', 'Mentalandsubstanceusedisorders_2000',
+                'Mentalandsubstanceusedisorders_2001', 'Mentalandsubstanceusedisorders_2002', 'Mentalandsubstanceusedisorders_2003', 'Mentalandsubstanceusedisorders_2004', 'Mentalandsubstanceusedisorders_2005',
+                'Mentalandsubstanceusedisorders_2006', 'Mentalandsubstanceusedisorders_2007', 'Mentalandsubstanceusedisorders_2008', 'Mentalandsubstanceusedisorders_2009', 'Mentalandsubstanceusedisorders_2010',
+                'Mentalandsubstanceusedisorders_2011', 'Mentalandsubstanceusedisorders_2012', 'Mentalandsubstanceusedisorders_2013', 'Mentalandsubstanceusedisorders_2014'];
+
+                countyTitle(e);
+                makeJson(e, dsk, 'Mental disorder');
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            ueMap.on('mouseenter', 'UE-rc1', function(e) {
+                ueMap.getCanvas().style.cursor = 'pointer';
+            });
+
+
+            // Change it back to a pointer when it leaves.
+            ueMap.on('mouseleave', 'UE-rc1', function() {
+                ueMap.getCanvas().style.cursor = '';
+            });
+        });
+        
+        
+        
+        // initialize layer 2 on load
+        ueMap.on('load', function() {
+            ueMap.addLayer({
+                id: 'UE-rc2',
+                type: "fill",
+                source: {
+                    minzoom: 5,
+                    maxzoom: 10,
+                    type: 'vector',
+                    url: 'mapbox://sigmafelix.6mc92gkq' //input your tileset url
+                },
+                'source-layer': 'County_info-auv3ds', //input your source layer name e.g. Owner-Renter-Pop-dr7310
+                paint: {
+                    'fill-color': ["step",
+                        ["get", "Mentalandsubstanceusedisorders_2002"],
+                        "#f6eff7",
+                        2,
+                        "#bce9eb",
+                        5,
+                        "#80dfdb",
+                        15,
+                        "#42c4bd",
+                        30,
+                        "#04a99e"
+                    ],
+                    "fill-opacity": 0.66
+                },
+                layout: {
+                    'visibility': 'none'
+                }
+
+            });
+
+
+            // setting layer styles on load
+            ueMap.on('click', 'UE-rc2', function(e) {
+                document.getElementById("mySidenav").style.width = "400px";
+
+                dsk = ['Mentalandsubstanceusedisorders_1991', 'Mentalandsubstanceusedisorders_1992', 'Mentalandsubstanceusedisorders_1993', 'Mentalandsubstanceusedisorders_1994', 'Mentalandsubstanceusedisorders_1995',
+                'Mentalandsubstanceusedisorders_1996', 'Mentalandsubstanceusedisorders_1997', 'Mentalandsubstanceusedisorders_1998', 'Mentalandsubstanceusedisorders_1999', 'Mentalandsubstanceusedisorders_2000',
+                'Mentalandsubstanceusedisorders_2001', 'Mentalandsubstanceusedisorders_2002', 'Mentalandsubstanceusedisorders_2003', 'Mentalandsubstanceusedisorders_2004', 'Mentalandsubstanceusedisorders_2005',
+                'Mentalandsubstanceusedisorders_2006', 'Mentalandsubstanceusedisorders_2007', 'Mentalandsubstanceusedisorders_2008', 'Mentalandsubstanceusedisorders_2009', 'Mentalandsubstanceusedisorders_2010',
+                'Mentalandsubstanceusedisorders_2011', 'Mentalandsubstanceusedisorders_2012', 'Mentalandsubstanceusedisorders_2013', 'Mentalandsubstanceusedisorders_2014'];
+                countyTitle(e);
+                makeJson(e, dsk, 'Mental disorder');
+
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            ueMap.on('mouseenter', 'UE-rc2', function(e) {
+                ueMap.getCanvas().style.cursor = 'pointer';
+            });
+
+            // Change it back to a pointer when it leaves.
+            ueMap.on('mouseleave', 'UE-rc2', function() {
+                ueMap.getCanvas().style.cursor = '';
+            });
+
+
+        });
+        
+        
+        
+        // initialize layer 3 on load
+        ueMap.on('load', function() {
+            ueMap.addLayer({
+                id: 'UE-rc3',
+                type: "fill",
+                source: {
+                    minzoom: 5,
+                    maxzoom: 10,
+                    type: 'vector',
+                    url: 'mapbox://sigmafelix.6mc92gkq'
+                },
+                'source-layer': 'County_info-auv3ds', 
+                paint: {
+                    'fill-color': ["step",
+                        ["get", "Mentalandsubstanceusedisorders_2010"],
+                        "#f6eff7",
+                        2,
+                        "#bce9eb",
+                        5,
+                        "#80dfdb",
+                        15,
+                        "#42c4bd",
+                        30,
+                        "#04a99e"
+                    ],
+                    "fill-opacity": 0.66
+                },
+                layout: {
+                    'visibility': 'none'
+                }
+
+            });
+
+
+
+
+            ueMap.on('click', 'UE-rc3', function(e) {
+                document.getElementById("mySidenav").style.width = "400px";
+
+                dsk = ['Mentalandsubstanceusedisorders_1991', 'Mentalandsubstanceusedisorders_1992', 'Mentalandsubstanceusedisorders_1993', 'Mentalandsubstanceusedisorders_1994', 'Mentalandsubstanceusedisorders_1995',
+                'Mentalandsubstanceusedisorders_1996', 'Mentalandsubstanceusedisorders_1997', 'Mentalandsubstanceusedisorders_1998', 'Mentalandsubstanceusedisorders_1999', 'Mentalandsubstanceusedisorders_2000',
+                'Mentalandsubstanceusedisorders_2001', 'Mentalandsubstanceusedisorders_2002', 'Mentalandsubstanceusedisorders_2003', 'Mentalandsubstanceusedisorders_2004', 'Mentalandsubstanceusedisorders_2005',
+                'Mentalandsubstanceusedisorders_2006', 'Mentalandsubstanceusedisorders_2007', 'Mentalandsubstanceusedisorders_2008', 'Mentalandsubstanceusedisorders_2009', 'Mentalandsubstanceusedisorders_2010',
+                'Mentalandsubstanceusedisorders_2011', 'Mentalandsubstanceusedisorders_2012', 'Mentalandsubstanceusedisorders_2013', 'Mentalandsubstanceusedisorders_2014'];
+
+                countyTitle(e);
+                makeJson(e, dsk, 'Mental disorder');
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            ueMap.on('mouseenter', 'UE-rc3', function(e) {
+                ueMap.getCanvas().style.cursor = 'pointer';
+            });
+
+
+            // Change it back to a pointer when it leaves.
+            ueMap.on('mouseleave', 'UE-rc3', function() {
+                ueMap.getCanvas().style.cursor = '';
+            });
+
+        });
+        
+    </script>
+
+</body>
+
+</html>

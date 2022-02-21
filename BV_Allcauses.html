@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Mental and substance use mortality: Three recessions</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <!-- mapbox import -->
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+    <!-- !!! Google font import -->
+    <link href="https://fonts.googleapis.com/css?family=Fjalla+One&display=swap" rel="stylesheet">
+    <!-- Plotly javascript import -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- custom javascript codes and stylesheet -->
+    <script type="text/javascript" src="./js/base.js"></script>
+    <link href='./css/felixstyle.css' rel='stylesheet' />
+
+</head>
+
+<body>
+    <!-- Plotly javascript import from the internet -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- side navigation panel for interactive visualization -->    
+    <div id="mySidenav" class="sidenav">
+        <!-- Close button -->
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <!-- County name -->
+        <div id='countytitle'> </div>
+        <!-- Plot -->
+        <div id="plotmenu"> </div>
+    </div>
+    <!-- nav for selecting layers -->
+    <nav id="layerlist"> </nav>
+
+    <!-- the main map -->
+    <div id='ue' class='map'>
+    </div>
+
+    <!-- Legend -->
+    <div class="LegendContainer">
+        <div class="legendItem">
+            <div class='layerDescription'> All-cause mortality <br> and unemployment</div>
+        </div>
+
+        <div>
+        <embed src='./img/PNG_Allcause_white.png' fill='transparent' width='200px' height='200px'  />
+        </div>
+        <!-- to help users understand what the mathematical sign in the legend item means -->
+        <div class="datasource">
+            <div class="layerDescription">'[' indicates '<='; ')' indicates '<'  </div>
+            <br>
+            <div class="layerDescription">Data source: <br><a href=https://www.healthdata.org>IHME</a>; <br>US Census Bureau</div>
+        </div>
+
+    </div>
+
+    <!-- add layer names to nav: script -->
+    <script type="text/javascript" src="./js/navcontrol.js"></script>
+
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoic2lnbWFmZWxpeCIsImEiOiJjam9kMThxcmcxMzkzM3FyMGw0ajNqZzExIn0.pKF9_nOc47mgqZ20ZrlYqA';
+
+        // Initialize the basemap
+        var ueMap = new mapboxgl.Map({
+            container: 'ue', 
+            style: 'mapbox://styles/sigmafelix/ck2jjwmmt2pym1cs2zxlq9h16',
+            center: [-98, 39],
+            zoom: 5,
+            minZoom: 5,
+            maxZoom: 10
+        });
+
+
+        // initialize layer 1 on load
+        ueMap.on('load', function() {
+            // make a bivariate choropleth
+            ueMap.addLayer({
+                id: 'UE-rc1',
+                type: "fill",
+                source: {
+                    minzoom: 5,
+                    maxzoom: 10,
+                    type: 'vector',
+                    url: 'mapbox://sigmafelix.476qs35x' 
+                },
+                'source-layer': 'County_bivariate-5hqwox',
+                paint: {
+                    'fill-color': ["match",
+                        ["get", "maue1"],
+                        10,"#EAEAEA",
+                        20,"#AEDEE0",
+                        30,"#5CC5C5",
+                        11,"#DDAFD1",
+                        22,"#A5ADD3",
+                        33,"#5397B8",
+                        13,"#BD64A8",
+                        26,"#8B61A9",
+                        39,"#3A4A96",'#ccc'
+                    ],
+                    "fill-opacity": 0.66
+                },
+                layout: {
+                    'visibility': 'none'
+                }
+
+            });
+
+
+            // toggle a click to make a sidebar
+            ueMap.on('click', 'UE-rc1', function(e) {
+                document.getElementById("mySidenav").style.width = "400px";
+
+                dsk = ['Allcauses_1991', 'Allcauses_1992', 'Allcauses_1993', 'Allcauses_1994', 'Allcauses_1995',
+                'Allcauses_1996', 'Allcauses_1997', 'Allcauses_1998', 'Allcauses_1999', 'Allcauses_2000',
+                'Allcauses_2001', 'Allcauses_2002', 'Allcauses_2003', 'Allcauses_2004', 'Allcauses_2005',
+                'Allcauses_2006', 'Allcauses_2007', 'Allcauses_2008', 'Allcauses_2009', 'Allcauses_2010',
+                'Allcauses_2011', 'Allcauses_2012', 'Allcauses_2013', 'Allcauses_2014'];
+                countyTitle(e);
+                makeJson(e, dsk, 'All-cause');
+
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            ueMap.on('mouseenter', 'UE-rc1', function(e) {
+                ueMap.getCanvas().style.cursor = 'pointer';
+            });
+
+            // Change it back to a pointer when it leaves.
+            ueMap.on('mouseleave', 'UE-rc1', function() {
+                ueMap.getCanvas().style.cursor = '';
+            });
+
+
+        });
+        
+        
+        // initialize layer 2 on load
+        ueMap.on('load', function() {
+            // make a bivariate choropleth
+            ueMap.addLayer({
+                id: 'UE-rc2',
+                type: "fill",
+                source: {
+                    minzoom: 5,
+                    maxzoom: 10,
+                    type: 'vector',
+                    url: 'mapbox://sigmafelix.476qs35x' 
+                },
+                'source-layer': 'County_bivariate-5hqwox',
+                paint: {
+                    'fill-color': ["match",
+                        ["get", "maue2"],
+                        10,"#EAEAEA",
+                        20,"#AEDEE0",
+                        30,"#5CC5C5",
+                        11,"#DDAFD1",
+                        22,"#A5ADD3",
+                        33,"#5397B8",
+                        13,"#BD64A8",
+                        26,"#8B61A9",
+                        39,"#3A4A96",'#ccc'
+                    ],
+                    "fill-opacity": 0.66
+                },
+                layout: {
+                    'visibility': 'none'
+                }
+
+            });
+
+            // toggle a click to make a sidebar
+            ueMap.on('click', 'UE-rc2', function(e) {
+                document.getElementById("mySidenav").style.width = "400px";
+
+                dsk = ['Allcauses_1991', 'Allcauses_1992', 'Allcauses_1993', 'Allcauses_1994', 'Allcauses_1995',
+                'Allcauses_1996', 'Allcauses_1997', 'Allcauses_1998', 'Allcauses_1999', 'Allcauses_2000',
+                'Allcauses_2001', 'Allcauses_2002', 'Allcauses_2003', 'Allcauses_2004', 'Allcauses_2005',
+                'Allcauses_2006', 'Allcauses_2007', 'Allcauses_2008', 'Allcauses_2009', 'Allcauses_2010',
+                'Allcauses_2011', 'Allcauses_2012', 'Allcauses_2013', 'Allcauses_2014'];
+                countyTitle(e);
+                makeJson(e, dsk, 'All-cause');
+
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            ueMap.on('mouseenter', 'UE-rc2', function(e) {
+                ueMap.getCanvas().style.cursor = 'pointer';
+            });
+
+            // Change it back to a pointer when it leaves.
+            ueMap.on('mouseleave', 'UE-rc2', function() {
+                ueMap.getCanvas().style.cursor = '';
+            });
+
+
+        });
+        
+        
+        // initialize layer 3 on load
+        ueMap.on('load', function() {
+            // make a bivariate choropleth
+            ueMap.addLayer({
+                id: 'UE-rc3',
+                type: "fill",
+                source: {
+                    minzoom: 5,
+                    maxzoom: 10,
+                    type: 'vector',
+                    url: 'mapbox://sigmafelix.476qs35x' 
+                },
+                'source-layer': 'County_bivariate-5hqwox', 
+                paint: {
+                    'fill-color': ["match",
+                        ["get", "maue3"],
+                        10,"#EAEAEA",
+                        20,"#AEDEE0",
+                        30,"#5CC5C5",
+                        11,"#DDAFD1",
+                        22,"#A5ADD3",
+                        33,"#5397B8",
+                        13,"#BD64A8",
+                        26,"#8B61A9",
+                        39,"#3A4A96",'#ccc'
+                    ],
+                    "fill-opacity": 0.66
+                },
+                layout: {
+                    'visibility': 'none'
+                }
+
+            });
+
+            // toggle a click to make a sidebar
+            ueMap.on('click', 'UE-rc3', function(e) {
+                document.getElementById("mySidenav").style.width = "400px";
+
+                dsk = ['Allcauses_1991', 'Allcauses_1992', 'Allcauses_1993', 'Allcauses_1994', 'Allcauses_1995',
+                'Allcauses_1996', 'Allcauses_1997', 'Allcauses_1998', 'Allcauses_1999', 'Allcauses_2000',
+                'Allcauses_2001', 'Allcauses_2002', 'Allcauses_2003', 'Allcauses_2004', 'Allcauses_2005',
+                'Allcauses_2006', 'Allcauses_2007', 'Allcauses_2008', 'Allcauses_2009', 'Allcauses_2010',
+                'Allcauses_2011', 'Allcauses_2012', 'Allcauses_2013', 'Allcauses_2014'];
+                countyTitle(e);
+                makeJson(e, dsk, 'All-cause');
+
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            ueMap.on('mouseenter', 'UE-rc3', function(e) {
+                ueMap.getCanvas().style.cursor = 'pointer';
+            });
+
+            // Change it back to a pointer when it leaves.
+            ueMap.on('mouseleave', 'UE-rc3', function() {
+                ueMap.getCanvas().style.cursor = '';
+            });
+        });
+        
+        
+        
+
+    </script>
+
+</body>
+
+</html>

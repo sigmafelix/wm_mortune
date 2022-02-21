@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Unemployment: Three recessions</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <!-- mapbox import -->
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+    <!-- !!! Google font import -->
+    <link href="https://fonts.googleapis.com/css?family=Fjalla+One&display=swap" rel="stylesheet">
+    <!-- Plotly javascript import -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- custom javascript codes and stylesheet -->
+    <script type="text/javascript" src="./js/chart.js"></script>
+    <script type="text/javascript" src="./js/base.js"></script>
+    <link href='./css/felixstyle.css' rel='stylesheet' />
+
+</head>
+
+<body>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    
+
+    <!-- Sidebar div with a close button -->
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <!-- plotly plot div -->
+        <div id="plotmenu"> </div>
+    </div>
+
+    <!-- layer control -->
+    <nav id="layerlist"> </nav>
+
+    <!-- map div -->
+    <div id='ue' class='map'>
+    </div>
+
+    <!-- legend div -->
+    <div class="LegendContainer">
+        <div class="legendItem">
+            <div class="layerDescription">Unemployment rate (percent)</div>
+        </div>
+
+    <!-- Legend contents -->
+
+        <div class="legendItem">
+            <div class="colorBox" style="background-color: #fcf4f0;"></div>
+            <div class="layerDescription">[0, 2)</div>
+        </div>
+        <div class="legendItem">
+            <div class="colorBox" style="background-color: #fcd5d5;"></div>
+            <div class="layerDescription">[2, 5)</div>
+        </div>
+        <div class="legendItem">
+            <div class="colorBox" style="background-color: #fcb6bb;"></div>
+            <div class="layerDescription">[5, 10)</div>
+        </div>
+        <div class="legendItem">
+            <div class="colorBox" style="background-color: #e493ba;"></div>
+            <div class="layerDescription">[10, 15)</div>
+        </div>
+        <div class="legendItem">
+            <div class="colorBox" style="background-color: #cc71bc;"></div>
+            <div class="layerDescription">[15, 100)</div>
+        </div>
+        <!-- to help users understand what the mathematical sign in the legend item means -->
+        <div class="datasource">
+            <div class="layerDescription">'[' indicates '<='; ')' indicates '<'  </div>
+            <br>
+            <!-- Data source div -->
+            <div class="layerDescription">Data source: <br>Bureau of Labor Statistics; <br>US Census Bureau</div>
+        </div>
+
+    </div>
+    <script type="text/javascript" src="./js/navcontrol.js"></script>
+
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoic2lnbWFmZWxpeCIsImEiOiJjam9kMThxcmcxMzkzM3FyMGw0ajNqZzExIn0.pKF9_nOc47mgqZ20ZrlYqA';
+
+        var ueMap = new mapboxgl.Map({
+            container: 'ue', // owners map div 
+            style: 'mapbox://styles/sigmafelix/ck2jjwmmt2pym1cs2zxlq9h16',
+            center: [-98, 39],
+            zoom: 5,
+            minZoom: 5,
+            maxZoom: 15
+        });
+
+
+
+        ueMap.on('load', function() {
+            ueMap.addLayer({
+                id: 'UE-rc1',
+                type: "fill",
+                source: {
+                    minzoom: 5,
+                    maxzoom: 10,
+                    type: 'vector',
+                    url: 'mapbox://sigmafelix.ay0d1yc5' //input your tileset url
+                },
+                'source-layer': 'County_Mort-c7qpxm', //input your source layer name e.g. Owner-Renter-Pop-dr7310
+                paint: {
+                    'fill-color': ["step",
+                        ["get", "UE1992"],
+                        "#fcf4f0",
+                        2,
+                        "#fcd5d5",
+                        5,
+                        "#fcb6bb",
+                        10,
+                        "#e493ba",
+                        15,
+                        "#cc71bc"
+                    ],
+                    "fill-opacity": 0.66
+                },
+                layout: {
+                    'visibility': 'none'
+                }
+
+            });
+
+
+
+
+            ueMap.on('click', 'UE-rc1', function(e) {
+                thisCounty = e.features[0]
+
+                makeJson(e);
+
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            ueMap.on('mouseenter', 'UE-rc1', function(e) {
+                ueMap.getCanvas().style.cursor = 'pointer';
+            });
+
+            ueMap.on('click', 'UE-rc1', function(e) {
+                document.getElementById("mySidenav").style.width = "400px";
+                makeJson(e);
+
+
+            });
+
+            // Change it back to a pointer when it leaves.
+            ueMap.on('mouseleave', 'UE-rc1', function() {
+                ueMap.getCanvas().style.cursor = '';
+            });
+
+
+        });
+        
+        
+        
+        ueMap.on('load', function() {
+            ueMap.addLayer({
+                id: 'UE-rc2',
+                type: "fill",
+                source: {
+                    minzoom: 5,
+                    maxzoom: 10,
+                    type: 'vector',
+                    url: 'mapbox://sigmafelix.ay0d1yc5' //input your tileset url
+                },
+                'source-layer': 'County_Mort-c7qpxm', //input your source layer name e.g. Owner-Renter-Pop-dr7310
+                paint: {
+                    'fill-color': ["step",
+                        ["get", "UE2003"],
+                        "#fcf4f0",
+                        2,
+                        "#fcd5d5",
+                        5,
+                        "#fcb6bb",
+                        10,
+                        "#e493ba",
+                        15,
+                        "#cc71bc"
+
+                    ],
+                    "fill-opacity": 0.66
+                },
+                layout: {
+                    'visibility': 'none'
+                }
+
+            });
+
+
+
+
+            ueMap.on('click', 'UE-rc2', function(e) {
+                thisCounty = e.features[0]
+
+                //var ids = thisCounty.properties.GEOID;
+                //var percent = thisCounty.properties.UE2008;
+
+                // Ensure that if the map is zoomed out such that multiple
+                // copies of the feature are visible, the popup appears
+                // over the copy being pointed to.
+                //while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                //coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                //}
+                makeJson(e);
+                //console.log(myJSON);
+
+                //console.log(thisCounty.properties[ds1[0]]);
+
+                // HTML + DOMcontent?
+                //new mapboxgl.Popup(maxwidth = '500px')
+                //.setLngLat(e.lngLat)
+                //.setHTML('<div><b> FIPS:' + ids + '</b><br><p>Unemployment change: ' + Math.round(percent, 3) + '%</p><br></div>')
+                //.setDOMContent(Plotly.newPlot('ue', ddd))
+                //.addTo(ueMap);
+                //});
+
+                //var div = window.document.createElement('popupchart');
+                //var popup = new mapboxgl.Popup(maxWidth = '450px')
+                //.setLngLat(e.lngLat)
+                //.setHTML('<div id="popupchart"> </div>')
+                //.setDOMContent(Plotly.newPlot('slider1', [myJSON]))
+                //.addTo(ueMap);
+
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            ueMap.on('mouseenter', 'UE-rc2', function(e) {
+                ueMap.getCanvas().style.cursor = 'pointer';
+            });
+
+            ueMap.on('click', 'UE-rc2', function(e) {
+                document.getElementById("mySidenav").style.width = "400px";
+                makeJson(e);
+
+
+            });
+
+            // Change it back to a pointer when it leaves.
+            ueMap.on('mouseleave', 'UE-rc2', function() {
+                ueMap.getCanvas().style.cursor = '';
+                //document.getElementById("mySidenav").style.width = "0px";
+            });
+
+
+        });
+        
+        
+        
+        ueMap.on('load', function() {
+            ueMap.addLayer({
+                id: 'UE-rc3',
+                type: "fill",
+                source: {
+                    minzoom: 5,
+                    maxzoom: 10,
+                    type: 'vector',
+                    url: 'mapbox://sigmafelix.ay0d1yc5' //input your tileset url
+                },
+                'source-layer': 'County_Mort-c7qpxm', //input your source layer name e.g. Owner-Renter-Pop-dr7310
+                paint: {
+                    'fill-color': ["step",
+                        ["get", "UE2009"],
+                        "#fcf4f0",
+                        2,
+                        "#fcd5d5",
+                        5,
+                        "#fcb6bb",
+                        10,
+                        "#e493ba",
+                        15,
+                        "#cc71bc"
+
+                    ],
+                    "fill-opacity": 0.66
+                },
+                layout: {
+                    'visibility': 'none'
+                }
+
+            });
+
+
+
+
+            ueMap.on('click', 'UE-rc3', function(e) {
+                thisCounty = e.features[0]
+
+                makeJson(e);
+
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            ueMap.on('mouseenter', 'UE-rc3', function(e) {
+                ueMap.getCanvas().style.cursor = 'pointer';
+            });
+
+            ueMap.on('click', 'UE-rc3', function(e) {
+                document.getElementById("mySidenav").style.width = "400px";
+                makeJson(e);
+
+
+            });
+
+            // Change it back to a pointer when it leaves.
+            ueMap.on('mouseleave', 'UE-rc3', function() {
+                ueMap.getCanvas().style.cursor = '';
+                //document.getElementById("mySidenav").style.width = "0px";
+            });
+
+
+        });
+        
+        
+        
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Tales of deaths in three recent recessions</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <!-- import Mapbox js and css -->
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+    <!-- import Google webfonts -->
+    <link href="https://fonts.googleapis.com/css?family=Oswald|Neuton|Questrial&display=swap" rel="stylesheet"> 
+    
+    <!-- custom javascript codes and stylesheet -->
+    <script type="text/javascript" src="./js/base.js"></script>
+    <link href='./css/felixstyle.css' rel='stylesheet' />
+
+</head>
+
+<body>
+    <!-- Be used only for this main page-->
+    <style>
+        body {
+            overflow: hidden;
+        }
+
+        .container {
+            scroll-snap-type: y mandatory;
+            overflow-x: hidden;
+            width: 100vw;
+            height: 99vh;
+        }
+
+        .map {
+            position: absolute;
+            height: 94vh;
+            width: 96vw;
+        }
+
+        .container div {
+            position: relative;
+            scroll-snap-align: start;
+            overflow-y: hidden;
+            height: 100vh;
+            width: 100vw;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .titlepage h1 {
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 3.2rem;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .titlepage h2 {
+            align-content: center;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 2rem;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        p {
+            font-family: 'Neuton', serif;
+            font-size: 1.5rem;
+        }
+
+        ul {
+            font-family: 'Neuton', serif;
+            font-size: 1.5rem;
+        }
+        
+        img{
+            width: auto;
+            height: auto;
+            max-width: 90%;
+            max-height: 90%;
+            align-content: center;
+            align-items: center;
+        }
+        .center-fit {
+            max-width: 80%;
+            max-height: 96vh;
+            margin: auto;
+        }
+
+        h1 {
+            font-family: 'Neuton', serif;
+        }
+
+        h2 {
+            font-family: 'Neuton', serif;
+        }
+    </style>
+
+    <!-- Define a container to make the scroll snap enabled -->
+    <div class='container'>
+        <!-- Title page; stylized -->
+        <div class='titlepage'>
+            <!-- To declare creative commons license CC-BY-NC -->
+            <!-- NonCommercial and Attribution -->
+            <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br />
+            <p>GEOG590: Final project</p>
+            <br/>
+            <h1>Exploring the association between mortality and unemployment rate at county scale in coterminous states of the US during three recession periods in 1991-2014</h1>
+            <h2>Insang Song</h2>
+            <h2>Department of Geography, University of Oregon</h2>
+            <section id="scbtn" class="demo"> <a href="#howto"> <span></span> <br> Start </a>
+            </section>
+        </div>
+
+
+        <!-- The usage guideline page -->
+        <div id = 'howto' style='width: 82%; height: 96%; padding: 3em 0em; margin-left: auto; margin-right: auto;'>
+            
+            <h1 style='text-align: center;'> How to use </h1>
+            <h2 style='text-align: center;'> ~ Basic navigation ~ </h2>
+            <p> This webpage consists of several snapping divs. You can explore through subpages using a round button with a simple arrowhead at the bottom right of each subpage. 
+            If you prefer using your mouse wheel, you can scroll through pages as you locate your mouse pointer at any point in the webpage (if there is no map) or the white vertical bar on the right side of each page (if there is a map). 
+            <h2 style='text-align: center;'> ~ Temporal trend exploration ~ </h2>
+            <p> Choropleth maps except for the unemployment rate provide function to explore the temporal trend of unemployment rates and cause-specific mortality rates in each county.
+            When you click a county polygon, it will show you a black hovering bar on the left side of the page, then it shows the name of county you clicked, the state the county is in, and an interactive line chart at the bottom of the title.
+            The line chart is interactive, so you can find the detailed numbers which were behind the color classes in the choropleth map. Numbers will pop out if you hover your cursor at any point in the chart area.
+            </p>  <br>          
+            <h2 style='text-align: center;'> ~ Layer control ~ </h2>
+            <p> As this web map addresses <b>three </b> different recession<b>s</b>, the map of each recession is layered in a page. You can control the layer by pressing the button in the navigation pane in the upper left side of your screen.
+            Each button has the legible text which indicates each recession period. Please note that you should turn the activated layer off before you turn on any other layer. 
+            </p>
+            <section id='scbtn3' class='btndown'> <a href='#summary'><span></span> <br> </a>
+            </section>
+        </div>     
+
+        <!-- Project summary -->
+        <div id = 'summary' style='width: 82%; height: 96%; padding: 3em 0em; margin-left: auto; margin-right: auto;'>
+            <h1 style='text-align: center;'> Background </h1>
+            <p>
+            The association between unemployment and human mortality has been studied by a extensive body of literature in community health. Studies on examining the association shifted from longitudinal follow-up or cohort design (Moser et al. 1984; Gerdtham and Johannesson 2003; Voss et al. 2004) and individual level studies (Martikainen and Valkonen 1996) to community-level associations in terms of the spatial dimension and cause-specific mortality.
+            Voss et al.(2004) showed the association between unemployment and mortality, especially for suicide and undetermined causes of deaths at the individual level with the twin registry in Sweden.
+            Laanani et al.(2013) showed the positive association between the increase in unemployment rates and the suicide rate in Western European countries.
+            van Lenthe et al.(2004) examined that neighborhoods in the highest quartile had increased mortality hazards compared to the lowest quartile as their statistical significance varied.
+            Halliday (2014) reported that poor local labor market conditions had the association with higher mortality risk for working-aged men, but no significant association for the elderly and women.
+            There were a few studies on the community-level association between unemployment and mortality with the spatially explicit approach. In this study, we focus on the spatial dimension of two variables in the coterminous US.
+            </p>
+            <h1 style='text-align: center;'> Focus of mapping </h1>
+            <ul>
+            <li>To explore whether high unemployment rates are associated with the high mortality rates and vice versa; Web maps can provide the effective way of exploring such patterns</li>
+            <li>To make users understand the multi-dimensional data easily, so as to find the spatial patterns of two assumedly related variables</li>
+            </ul>
+            <section id="scbtn3" class="btndown"> <a href="#method"> <span></span> <br>  </a>
+            </section>
+        </div>
+
+
+        <!-- Method page -->
+        <div id = 'method' style='width: 82%; height: 96%; padding: 3em 0em; margin-left: auto; margin-right: auto;'>
+            <h1 style='text-align: center;'> Methods </h1>
+            <h2 style='text-align: center'> ~ Identification of three recession periods ~</h2>
+            <p> In this map, three recession periods were identified following the announcement of recession periods by <a href='https://www.nber.org/cycles.html'>the National Bureau of Economic Research</a>.
+            The periods are 1991, 2001, and 2007-2009. Thus, we will explore the association of the mortality rates of the post-recession years (1992, 2002, and 2010) and the unemployment rates of the very or last year of each recession (1991, 2001, and 2009). 
+            </p>
+            <h2 style='text-align: center;'> ~ Temporally lagged association ~</h2>
+            <p> The bivariate maps were generated following the 'lagged association', as the figure below implies. In other words, the mortality rates of this year are not necessarily associated with the 
+            unemployment rate of this year; Here we assume that the unemployment rates of the last year would affect the mortality rates of this year.
+            </p>
+            <img src='./img/GG_ARR.png' />
+            <section id='scbtn3' class='btndown'> <a href='#ue_explanation'><span></span> <br> </a>
+            </section>
+        </div>
+
+        <!-- A brief summary of the pattern of unemployment rates -->
+        <div id = 'ue_explanation' style='width: 82%; height: 96%; padding: 3em 0em; margin-left: auto; margin-right: auto;'>
+            <h2 style='text-align: center; font-family: "Neuton", serif;'> ~ Classification scheme ~ </h2>
+            <p> Map classification was done incorporating the natural break (a.k.a. Fisher-Jenks classification scheme) and the pretty break to make the numbers more legible.</p>
+            <br>
+            <h1 style='text-align: center; font-family: "Neuton", serif;'> Spatial pattern of unemployment rates </h1>
+            <p> In the following maps, you can explore the spatial patterns of unemployment rates after three recessions. Two points can be highlighted:
+            </p>
+            <ul>
+            <li> The second recession, which lasted for seven months, affected the unemployment rate relatively less severe than other recession periods: 
+            Unemployment rates were relatively low compared to other post-recession periods 
+            </li>
+            <li> Similar patterns through three periods were observed: Higher unemployment rates showed a banded form in the western states (Washington, Oregon, and California)
+            and a sporadic pattern in southeastern states
+            </li>
+            </ul>
+            <p> Please feel free to explore the map in the next page by pressing the scroll down button at the bottom right of the page!
+            </p>
+            <section id='scbtn3' class='btndown'> <a href='#uepattern'><span></span> <br> </a>
+            </section>
+        </div>
+
+        <!-- Maps below -->
+        <!-- Map #1: Unemployment rate pattern -->
+        <div id='uepattern'>
+            <iframe scrolling="no" marginheight="0" marginwidth="0" src="Unemployment.html" width="100%" height="99%" frameborder="0"></iframe>
+            <section id="scbtn2" class="btndown"> <a href="#mort_explanation"> <span></span> </a>
+            </section>
+        </div>
+
+        <!-- Mortality rates explanation: spatial and temporal pattern -->
+        <div id = 'mort_explanation' style='width: 82%; height: 96%; padding: 3em 0em; margin-left: auto; margin-right: auto;'>
+            <h1 style='text-align: center; font-family: "Neuton", serif;'> General pattern of mortality rates </h1>
+            <ul>
+            <li> Mortality rates have different spatial and temporal patterns for causes of death:</li>
+            <ul>
+            <li> All-cause mortality rates showed a clustered pattern of higher values in parts of Arkansas, South Carolina, and West Virginia for all recession periods</li>
+            <li> Mortality rates due to mental and substance-use disorders showed a higher value cluster covering parts of New Mexico and Arizona for all recession periods</li>
+            <li> Mortality rates due to self-harm and interpersonal violence have spatially sporadic patterns for all periods, almost all counties are with the high proportion of native Americans (e.g., Shannon, SD [renamed as Oglala in 2015], Sioux, ND, Navajo and Apache, AZ)</li>
+            </ul>
+            <br>
+            <ul>
+            <li> All-cause mortality rates are in the strongly decreasing patterns overall</li>
+            <li> Mortality rates due to mental and substance-use disorders showed the increasing pattern in almost every counties</li>
+            <li> Mortality rates due to self-harm and interpersonal violence decreased until 2000, but turned to the sharply increasing trend after then</li>
+            </ul>
+            </ul>
+            </p>
+            <section id='scbtn3' class='btndown'> <a href='#mort_all'><span></span> <br> </a>
+            </section>
+        </div>
+
+        <!-- Map #2: All-cause mortality rate pattern -->
+        <div id='mort_all'>
+            <iframe scrolling="no" marginheight="0" marginwidth="0" src="Mortality_Allcause.html" width="100%" height="99%" frameborder="0"></iframe>
+            <section id="scbtn2" class="btndown"> <a href="#mort_mental"> <span></span>  </a>
+            </section>
+        </div>
+
+        <!-- Map #3: Mental disorder and substance-use disorder mortality rate pattern -->
+        <div id='mort_mental'>
+            <iframe scrolling="no" marginheight="0" marginwidth="0" src="Mortality_Mental.html" width="100%" height="99%" frameborder="0"></iframe>
+            <section id="scbtn2" class="btndown"> <a href="#mort_selfharm"> <span></span>  </a>
+            </section>
+        </div>
+
+        <!-- Map #4: Self-harm and interpersonal violence mortality rate pattern -->
+        <div id='mort_selfharm'>
+            <iframe scrolling="no" marginheight="0" marginwidth="0" src="Mortality_Selfharm.html" width="100%" height="99%" frameborder="0"></iframe>
+            <section id="scbtn2" class="btndown"> <a href="#bv_explanation"> <span></span> <br> </a>
+            </section>
+        </div>
+
+        <!-- How to read bivariate choropleth -->
+        <div id = 'bv_explanation' style='width: 82%; height: 96%; padding: 3em 0em; margin-left: auto; margin-right: auto;'>
+            <h1 style='text-align: center; font-family: "Neuton", serif;'> Exploring bivariate association </h1>
+            <p> Here we are going to see the spatial association of two variables, unemployment rates and mortality rates, employing <b>bivariate choropleth</b>. It has a two-dimensional legend indicating bivariate association between two color variables.
+            As the values are continuous, we choose <i> sequential</i> colors. Considering a semantic association between color and objects, two color schemes would be associated with colors symbolizing negative meanings. However, as two variables to be displayed
+            are all negative, it is inevitable to choose a color scheme of two that is not necessarily associated with a variable with negative meaning.
+            Following <a href='http://www.personal.psu.edu/cab38/ColorSch/SchHTMLs/CBColorSeqSeq.html'>Cynthia Brewer's bivariate color scheme</a>, the color palette with nine classes comprises three colors of each dimension that has purple and turquoise sequential scheme, respectively.
+            </p>
+            <br>
+            <!--<img style='justify-content=center; height=450px;' src='./img/PNG_Allcause_white.png'/>-->
+            <section id='scbtn3' class='btndown'> <a href='#bv_all'><span></span> <br> </a>
+            </section>
+        </div>
+
+        <!-- Map #5: Bivariate choropleth for the all-cause mortality rates and the unemployment rate of the previous year -->
+        <div id='bv_all'>
+            <iframe scrolling="no" marginheight="0" marginwidth="0" src="BV_Allcauses.html" width="100%" height="99%" frameborder="0"></iframe>
+            <section id="scbtn2" class="btndown"> <a href="#bv_mental"> <span></span> <br>  </a>
+            </section>
+        </div>
+        <!-- Map #6: Bivariate choropleth for the mental and substance-use mortality rates and the unemployment rate of the previous year -->
+        <div id='bv_mental'>
+            <iframe scrolling="no" marginheight="0" marginwidth="0" src="BV_Mental.html" width="100%" height="99%" frameborder="0"></iframe>
+            <section id="scbtn2" class="btndown"> <a href="#bv_selfharm"> <span></span> <br>  </a>       
+        </div>
+
+        <!-- Map #7: Bivariate choropleth for the self-harm and interpersonal mortality rates and the unemployment rates of the previous year-->
+        <div id='bv_selfharm'>
+            <iframe scrolling="no" marginheight="0" marginwidth="0" src="BV_Selfharm.html" width="100%" height="99%" frameborder="0"></iframe>
+            <section id="scbtn2" class="btndown"> <a href="#outro"> <span></span> <br>  </a>
+        </div>
+
+        <!-- Takeaway and outro -->
+        <div id = 'outro' style='width: 82%; height: 96%; padding: 3em 0em; margin-left: auto; margin-right: auto;'>
+            <h1 style='text-align: center; font-family: "Neuton", serif;'> Summary of patterns and takeaways </h1>
+            <h2 style='text-align: center; font-family: "Neuton", serif;'> ~ Summary of bivariate association ~ </h2>
+            <p> We explored the spatial and temporal patterns of unemployment rates and mortality rates. The bivariate association showed us a clear distinction of the second recession in the study period.
+            It merely affected unemployment rates, but mortality rates were on the rise or still at the intermediate level compared to the later period. The spatio-temporal trend was overwhelmed by the temporal trends of mortality rates, which had monotonically been decreasing (as seen in all-cause mortality rate) or increasing (other causes).
+            Such temporal trends also affected the bivariate choropleth, which designed to compare spatio-temporal clusters efficiently, to have a few number of counties in a certain class. This is due to the highly time-dependent change of each variable.
+            </p>
+            <h2 style='text-align: center; font-family: "Neuton", serif;'> ~ Takeaways ~ </h2>
+            <ul>
+            <li> The results showed the spatially heterogeneous patterns of association, the region having high-high association of two variables was in the Deep South.</li>
+            <li> The results were affected by the temporal trend of mortality rates; counties experiencing the rapid increase in mental disorders and self-harm tend to have the high-high pattern of variables.</li>
+            <li> Still, there is possibility of spurious correlation between two variables, even though there were several spatial clusters for three recession periods. </li>
+            <li> Further suggestion would be the examination of <i>sole</i> effect of the unemployment rate to the mortality rate with regard to other factors affecting the mortality rate.</li>
+            </ul>
+            <h2 style='text-align: center; font-family: "Neuton", serif;'> ~ Acknowledgment ~ </h2>
+            <p> This map can be thanks to W3School, users of stackoverflow.com, Mapbox API documentation, and the instructor Joanna Merson.
+            </p>
+            <br>
+            <section id="scbtn2" class="btndown"> <a href="#biblio"> <span></span> <br>  </a>
+ 
+        </div>
+
+
+        <!-- Bibliography -->
+        <div id='biblio'>
+            <iframe scrolling="no" marginheight="0" marginwidth="0" src="Bibliography.html" width="100%" height="99%" frameborder="0"></iframe>            
+        </div>
+        
+    </div>
+    <script>
+
+
+
+    </script>
+
+</body>
+
+</html>

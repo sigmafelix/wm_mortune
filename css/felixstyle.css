@@ -1,0 +1,347 @@
+/* side panel for interactive Plotly plots */
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+/* side panel: close button : template */
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+/* side panel: close button: color change at hover */
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+/*  style for items with the class "LegendContainer" */
+.LegendContainer {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    z-index: 1;
+    column-count: 1;
+    column-width: 320px;
+    width: 340px;
+    height: 320px;
+    background: rgba(255, 255, 255, 0);
+    border-radius: 7px;
+    font-family: 'Fjalla One', sans-serif;
+
+}
+
+/* style for items with the class "legendItem" */
+.legendItem {
+    float: left;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+
+/* style for items with the class "colorBox" */
+/* it has a circle shape due to having border-radius property */
+.colorBox {
+    width: 15px;
+    height: 15px;
+    float: left;
+    border-radius: 8px;
+    margin-left: 8px;
+}
+
+/* style for items with the class "layerDescription" */
+.layerDescription {
+    color: white;
+    float: left;
+    margin-left: 10px;
+}
+
+/* style for items with the class "datasource" */
+.datasource {
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 10px;
+}
+
+/* style for items with the class "map" */
+.map {
+    position: absolute;
+    height: 100vh;
+    width: 98vw;
+}
+
+/* style for items with the id "layerlist" (nav) */
+#layerlist {
+    background: #fff;
+    position: absolute;
+    z-index: 1;
+    top: 20px;
+    left: 20px;
+    border-radius: 3px;
+    width: 200px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    font-family: 'Fjalla One', sans-serif;
+}
+
+#layerlist a {
+    font-size: 13px;
+    color: #404040;
+    display: block;
+    margin: 0;
+    padding: 0;
+    padding: 5px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    text-align: center;
+}
+
+#layerlist a:last-child {
+    border: none;
+}
+
+#layerlist a:hover {
+    background-color: #f8f8f8;
+    color: #404040;
+}
+
+#layerlist a.active {
+    background-color: #3887be;
+    color: #ffffff;
+}
+
+#layerlist a.active:hover {
+    background: #3074a4;
+}
+
+/* Set style for the items with the id 'countytitle' */
+#countytitle {
+    font-family: "Fjalla One", sans-serif;
+    font-size: 20px;
+    color: #ffffff;
+    text-align: center;
+}
+
+/* Set style for the items in the element id 'howto' */
+#howto {
+  font-family: "Neuton", serif;
+}
+
+#howto p {
+  margin-left: 20px;
+  margin-right: 20px;
+
+}
+
+/* Set style for the items in the element id 'method' */
+#method {
+  font-family: "Neuton", serif;
+}
+
+#method p {
+  margin-left: 20px;
+  margin-right: 20px;
+
+}
+
+/* section style: for the 'scroll' button */
+section {
+    width: 10%;
+    height: 10%;
+    font-size: 2rem;
+ }
+
+section::after {
+    position: absolute;
+    bottom: 10%;
+    right: 10%;
+    content: '';
+    width: 10%;
+    height: 10%;
+  }
+
+section#scbtn {
+    width: 100%;
+    height: 100%;
+    font-size: 2rem;
+ }
+
+section#scbtn::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    content: '';
+    width: 100%;
+    height: 80%;
+    background: -webkit-linear-gradient(top,rgba(0,0,0,0) 0,rgba(0,0,0,.8) 85%,rgba(0,0,0,.8) 80%);
+    background: linear-gradient(to bottom,rgba(0,0,0,0) 0,rgba(0,0,0,.8) 85%,rgba(0,0,0,.8) 80%);
+  }
+
+/* for class 'demo': an arrowhead in a circle */
+.demo a {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    z-index: 6;
+    display: inline-block;
+    -webkit-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    color: #FFF;
+    font : normal 400 20px/1 'Oswald', sans-serif;
+    letter-spacing: .1em;
+    text-decoration: none;
+    transition: opacity .3s;
+  }
+
+/* if hover on the class 'demo', the opacity changes */
+.demo a:hover {
+    opacity: .5;
+  }
+
+#scbtn a {
+    padding-top: 30px;
+  }
+
+#scbtn a span {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 46px;
+    height: 46px;
+    margin-left: -23px;
+    border: 3px solid #FFF;
+    border-radius: 100%;
+    box-sizing: border-box;
+  }
+
+/* The button at the title: white arrowhead */
+#scbtn a span::after {
+    position: absolute;
+    top: 24px;
+    right: 10px;
+    content: '';
+    width: 20px;
+    height: 20px;
+    margin: -16px 0 0 -8px;
+    border-left: 3px solid #FFF;
+    border-bottom: 3px solid #FFF;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    box-sizing: border-box;
+  }
+
+
+
+/* scroll button on the bottom right: stylize the button, and give the right position to it */
+.btndown a {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    z-index: 6;
+    display: inline-block;
+    -webkit-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    color: #FFF;
+    font : normal 400 20px/1 'Oswald', sans-serif;
+    letter-spacing: 0em;
+    text-decoration: none;
+    transition: opacity .3s;
+  }
+
+.btndown a:hover {
+    opacity: .5;
+  }
+
+
+/* Another button: not a button in the title, but overlaid on the dark background map */
+#scbtn2 a {
+    padding-top: 30px;
+  }
+
+#scbtn2 a span {
+    position: absolute;
+    top: 0;
+    right: 40px;
+    width: 36px;
+    height: 36px;
+    margin-left: -18px;
+    border: 2px solid #FFF;
+    border-radius: 100%;
+    box-sizing: border-box;
+  }
+
+/* Another button: white arrowhead */
+#scbtn2 a span::after {
+    position: absolute;
+    top: 18px;
+    right: 8px;
+    content: '';
+    width: 16px;
+    height: 16px;
+    margin: -12px 0 0 -8px;
+    border-left: 2px solid #FFF;
+    border-bottom: 2px solid #FFF;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    box-sizing: border-box;
+  }
+
+/* Another button: not a button in the title, but overlaid on the white background page */
+#scbtn3 a {
+    padding-top: 30px;
+  }
+
+/* Another button: black arrowhead */
+#scbtn3 a span {
+    position: absolute;
+    top: 0;
+    right: 40px;
+    width: 36px;
+    height: 36px;
+    margin-left: -18px;
+    border: 2px solid #000;
+    border-radius: 100%;
+    box-sizing: border-box;
+  }
+
+
+
+#scbtn3 a span::after {
+    position: absolute;
+    top: 18px;
+    right: 8px;
+    content: '';
+    width: 16px;
+    height: 16px;
+    margin: -12px 0 0 -8px;
+    border-left: 2px solid #000;
+    border-bottom: 2px solid #000;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    box-sizing: border-box;
+  }
+

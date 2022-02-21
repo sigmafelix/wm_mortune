@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Mental and substance use mortality: Three recessions</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <!-- mapbox import -->
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
+    <!-- !!! Google font import -->
+    <link href="https://fonts.googleapis.com/css?family=Fjalla+One&display=swap" rel="stylesheet">
+    <!-- Plotly javascript import -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- custom javascript codes and stylesheet -->
+    <script type="text/javascript" src="./js/base.js"></script>
+    <link href='./css/felixstyle.css' rel='stylesheet' />
+
+</head>
+
+<body>
+    <!-- Plotly javascript import from the internet -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- side navigation panel for interactive visualization -->    
+    <div id="mySidenav" class="sidenav">
+        <!-- Close button -->
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <!-- County name -->
+        <div id='countytitle'> </div>
+        <!-- Plot -->
+        <div id="plotmenu"> </div>
+    </div>
+    <!-- nav for selecting layers -->
+    <nav id="layerlist"> </nav>
+
+    <!-- the main map -->
+    <div id='ue' class='map'>
+    </div>
+
+    <!-- Legend -->
+    <div class="LegendContainer">
+        
+        <div class="legendItem">
+            <div class='layerDescription'> Self-harm and interpersonal violence mortality <br> and unemployment</div>
+        </div>
+        <div>
+        <embed src='./img/PNG_Selfharm_white.png' fill='transparent' width='200px' height='200px'  />
+        </div>
+        <!-- to help users understand what the mathematical sign in the legend item mean-->
+        <div class="datasource">
+            <div class="layerDescription">'[' indicates '<='; ')' indicates '<'  </div>
+            <br>
+            <div class="layerDescription">Data source: <br><a href=https://www.healthdata.org>IHME</a>; <br>US Census Bureau</div>
+        </div>
+
+    </div>
+
+    <!-- add layer names to nav: script -->
+    <script type="text/javascript" src="./js/navcontrol.js"></script>
+
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoic2lnbWFmZWxpeCIsImEiOiJjam9kMThxcmcxMzkzM3FyMGw0ajNqZzExIn0.pKF9_nOc47mgqZ20ZrlYqA';
+
+        var ueMap = new mapboxgl.Map({
+            container: 'ue',  
+            style: 'mapbox://styles/sigmafelix/ck2jjwmmt2pym1cs2zxlq9h16',
+            center: [-98, 39],
+            zoom: 5,
+            minZoom: 5,
+            maxZoom: 10
+        });
+
+
+        ueMap.on('load', function() {
+            // make a bivariate choropleth
+            ueMap.addLayer({
+                id: 'UE-rc1',
+                type: "fill",
+                source: {
+                    minzoom: 5,
+                    maxzoom: 10,
+                    type: 'vector',
+                    url: 'mapbox://sigmafelix.476qs35x' 
+                },
+                'source-layer': 'County_bivariate-5hqwox', 
+                paint: {
+                    'fill-color': ["match",
+                        ["get", "mhue1"],
+                        10,"#EAEAEA",
+                        20,"#AEDEE0",
+                        30,"#5CC5C5",
+                        11,"#DDAFD1",
+                        22,"#A5ADD3",
+                        33,"#5397B8",
+                        13,"#BD64A8",
+                        26,"#8B61A9",
+                        39,"#3A4A96",'#ccc'
+
+                    ],
+                    "fill-opacity": 0.66
+                },
+                layout: {
+                    'visibility': 'none'
+                }
+
+            });
+
+
+            ueMap.on('click', 'UE-rc1', function(e) {
+                document.getElementById("mySidenav").style.width = "400px";
+
+                dsk = ['Self.harmandinterpersonalviolence_1991', 'Self.harmandinterpersonalviolence_1992', 'Self.harmandinterpersonalviolence_1993', 'Self.harmandinterpersonalviolence_1994', 'Self.harmandinterpersonalviolence_1995',
+                'Self.harmandinterpersonalviolence_1996', 'Self.harmandinterpersonalviolence_1997', 'Self.harmandinterpersonalviolence_1998', 'Self.harmandinterpersonalviolence_1999', 'Self.harmandinterpersonalviolence_2000',
+                'Self.harmandinterpersonalviolence_2001', 'Self.harmandinterpersonalviolence_2002', 'Self.harmandinterpersonalviolence_2003', 'Self.harmandinterpersonalviolence_2004', 'Self.harmandinterpersonalviolence_2005',
+                'Self.harmandinterpersonalviolence_2006', 'Self.harmandinterpersonalviolence_2007', 'Self.harmandinterpersonalviolence_2008', 'Self.harmandinterpersonalviolence_2009', 'Self.harmandinterpersonalviolence_2010',
+                'Self.harmandinterpersonalviolence_2011', 'Self.harmandinterpersonalviolence_2012', 'Self.harmandinterpersonalviolence_2013', 'Self.harmandinterpersonalviolence_2014'];
+
+                countyTitle(e);
+                makeJson(e, dsk, 'Self-harm');
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            ueMap.on('mouseenter', 'UE-rc1', function(e) {
+                ueMap.getCanvas().style.cursor = 'pointer';
+            });
+
+            ueMap.on('click', 'UE-rc1', function(e) {
+                document.getElementById("mySidenav").style.width = "400px";
+                countyTitle(e);
+                makeJson(e, dsk, 'Self-harm');
+
+            });
+
+            // Change it back to a pointer when it leaves.
+            ueMap.on('mouseleave', 'UE-rc1', function() {
+                ueMap.getCanvas().style.cursor = '';
+            });
+
+        });
+        
+        
+        
+        ueMap.on('load', function() {
+            // make a bivariate choropleth
+            ueMap.addLayer({
+                id: 'UE-rc2',
+                type: "fill",
+                source: {
+                    minzoom: 5,
+                    maxzoom: 10,
+                    type: 'vector',
+                    url: 'mapbox://sigmafelix.476qs35x' 
+                },
+                'source-layer': 'County_bivariate-5hqwox',
+                paint: {
+                    'fill-color': ["match",
+                        ["get", "mhue2"],
+                        10,"#EAEAEA",
+                        20,"#AEDEE0",
+                        30,"#5CC5C5",
+                        11,"#DDAFD1",
+                        22,"#A5ADD3",
+                        33,"#5397B8",
+                        13,"#BD64A8",
+                        26,"#8B61A9",
+                        39,"#3A4A96",'#ccc'
+
+                    ],
+                    "fill-opacity": 0.66
+                },
+                layout: {
+                    'visibility': 'none'
+                }
+
+            });
+
+
+
+
+            ueMap.on('click', 'UE-rc2', function(e) {
+                document.getElementById("mySidenav").style.width = "400px";
+
+                dsk = ['Self.harmandinterpersonalviolence_1991', 'Self.harmandinterpersonalviolence_1992', 'Self.harmandinterpersonalviolence_1993', 'Self.harmandinterpersonalviolence_1994', 'Self.harmandinterpersonalviolence_1995',
+                'Self.harmandinterpersonalviolence_1996', 'Self.harmandinterpersonalviolence_1997', 'Self.harmandinterpersonalviolence_1998', 'Self.harmandinterpersonalviolence_1999', 'Self.harmandinterpersonalviolence_2000',
+                'Self.harmandinterpersonalviolence_2001', 'Self.harmandinterpersonalviolence_2002', 'Self.harmandinterpersonalviolence_2003', 'Self.harmandinterpersonalviolence_2004', 'Self.harmandinterpersonalviolence_2005',
+                'Self.harmandinterpersonalviolence_2006', 'Self.harmandinterpersonalviolence_2007', 'Self.harmandinterpersonalviolence_2008', 'Self.harmandinterpersonalviolence_2009', 'Self.harmandinterpersonalviolence_2010',
+                'Self.harmandinterpersonalviolence_2011', 'Self.harmandinterpersonalviolence_2012', 'Self.harmandinterpersonalviolence_2013', 'Self.harmandinterpersonalviolence_2014'];
+
+                countyTitle(e);
+                makeJson(e, dsk, 'Self-harm');
+
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            ueMap.on('mouseenter', 'UE-rc2', function(e) {
+                ueMap.getCanvas().style.cursor = 'pointer';
+            });
+
+            // Change it back to a pointer when it leaves.
+            ueMap.on('mouseleave', 'UE-rc2', function() {
+                ueMap.getCanvas().style.cursor = '';
+            });
+
+
+        });
+        
+        
+        
+        ueMap.on('load', function() {
+            // make a bivariate choropleth
+            ueMap.addLayer({
+                id: 'UE-rc3',
+                type: "fill",
+                source: {
+                    minzoom: 2,
+                    maxzoom: 10,
+                    type: 'vector',
+                    url: 'mapbox://sigmafelix.476qs35x' 
+                },
+                'source-layer': 'County_bivariate-5hqwox', 
+                paint: {
+                    'fill-color': ["match",
+                        ["get", "mhue3"],
+                        10,"#EAEAEA",
+                        20,"#AEDEE0",
+                        30,"#5CC5C5",
+                        11,"#DDAFD1",
+                        22,"#A5ADD3",
+                        33,"#5397B8",
+                        13,"#BD64A8",
+                        26,"#8B61A9",
+                        39,"#3A4A96",'#ccc'
+
+                    ],
+                    "fill-opacity": 0.66
+                },
+                layout: {
+                    'visibility': 'none'
+                }
+
+            });
+
+
+
+
+            ueMap.on('click', 'UE-rc3', function(e) {
+                document.getElementById("mySidenav").style.width = "400px";
+
+                dsk = ['Self.harmandinterpersonalviolence_1991', 'Self.harmandinterpersonalviolence_1992', 'Self.harmandinterpersonalviolence_1993', 'Self.harmandinterpersonalviolence_1994', 'Self.harmandinterpersonalviolence_1995',
+                'Self.harmandinterpersonalviolence_1996', 'Self.harmandinterpersonalviolence_1997', 'Self.harmandinterpersonalviolence_1998', 'Self.harmandinterpersonalviolence_1999', 'Self.harmandinterpersonalviolence_2000',
+                'Self.harmandinterpersonalviolence_2001', 'Self.harmandinterpersonalviolence_2002', 'Self.harmandinterpersonalviolence_2003', 'Self.harmandinterpersonalviolence_2004', 'Self.harmandinterpersonalviolence_2005',
+                'Self.harmandinterpersonalviolence_2006', 'Self.harmandinterpersonalviolence_2007', 'Self.harmandinterpersonalviolence_2008', 'Self.harmandinterpersonalviolence_2009', 'Self.harmandinterpersonalviolence_2010',
+                'Self.harmandinterpersonalviolence_2011', 'Self.harmandinterpersonalviolence_2012', 'Self.harmandinterpersonalviolence_2013', 'Self.harmandinterpersonalviolence_2014'];
+
+                countyTitle(e);
+                makeJson(e, dsk, 'Self-harm');
+
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            ueMap.on('mouseenter', 'UE-rc3', function(e) {
+                ueMap.getCanvas().style.cursor = 'pointer';
+            });
+
+            // Change it back to a pointer when it leaves.
+            ueMap.on('mouseleave', 'UE-rc3', function() {
+                ueMap.getCanvas().style.cursor = '';
+            });
+
+
+        });
+        
+        
+        
+
+    </script>
+
+</body>
+
+</html>
